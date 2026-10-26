@@ -1,3 +1,4 @@
+import pygame
 import math
 import random
 import time
@@ -45,7 +46,7 @@ TILE_SIZE = 50
 
 
 class MatematikLabirentPro:
-    def _init_(self):
+    def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Alanya Lider Robotik - Matematik Labirenti Pro")
@@ -66,7 +67,7 @@ class MatematikLabirentPro:
         self.clicked_last_frame = False
 
         self.skorlar_file = "skorlar.json"
-        self.puan_siniri = 200
+        self.puan_siniri = 100
 
         self.feedback_text = ""
         self.feedback_time = 0
@@ -108,6 +109,7 @@ class MatematikLabirentPro:
 
         self.oyuncu_x, self.oyuncu_y = 1, 1
         self.puan = 0
+        self.skor_kaydedildi = False
         self.pas_gec_hakki = 3
         self.cift_puan_aktif = False
         self.camera_x, self.camera_y = 0, 0
@@ -302,7 +304,7 @@ class MatematikLabirentPro:
 
                 if event.type == pygame.KEYDOWN:
                     # Genel kısayol
-                    if event.key == pygame.K_r and self.state in ["PLAYING", "QUESTION", "PAUSE"]:
+                    if event.key == pygame.K_r and self.state in ["PLAYING", "QUESTION", "PAUSE", "WIN_SCREEN", "LOSE_SCREEN"]:
                         self.oyunu_sifirla()
                         self.state = "PLAYING"
 
@@ -503,7 +505,9 @@ class MatematikLabirentPro:
                     if self.puan >= self.puan_siniri:
                         txt = "TEBRİKLER! KAZANDIN"
                         clr = GREEN
-                        self.skor_kaydet(self.player_name, self.puan)
+                        if not self.skor_kaydedildi:
+                            self.skor_kaydet(self.player_name, self.puan)
+                            self.skor_kaydedildi = True
                     else:
                         txt = "HEDEFE ULAŞTIN AMA PUAN YETERSİZ"
                         clr = RED
@@ -542,5 +546,5 @@ class MatematikLabirentPro:
         pygame.quit()
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     MatematikLabirentPro().run()
